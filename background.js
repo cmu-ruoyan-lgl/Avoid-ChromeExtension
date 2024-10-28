@@ -20,7 +20,7 @@ function isUrlBlocked(url, patterns) {
 function showBlockNotification(url) {
   chrome.notifications.create({
     type: 'basic',
-    iconUrl: 'icon48.png',  // 需要添加一个图标文件
+    iconUrl: 'icon.jpg',  // 修改为与manifest中相同的图标
     title: '网页已被屏蔽',
     message: '已阻止访问: ' + url
   });
