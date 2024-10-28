@@ -32,6 +32,84 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
+  // 导入按钮点击事件
+  document.getElementById('importBtn').addEventListener('click', function() {
+    document.getElementById('fileInput').click();
+  });
+
+  // 文件选择变化事件
+  document.getElementById('fileInput').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (!file) {
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+      try {
+        // 读取文件内容
+        const content = e.target.result;
+        
+        // 将文件内容按行分割并过滤空行
+        const importedUrls = content.split('\n')
+          .map(line => line.trim())
+          .filter(line => line.length > 0);
+
+        // 获取当前已有的URL列表
+        chrome.storage.local.get(['killList'], function(result) {
+          const currentUrls = result.killList || [];
+          
+          // 合并并去重
+          const mergedUrls = Array.from(new Set([...currentUrls, ...importedUrls]));
+          
+          // 更新textarea显示
+          document.getElementById('killList').value = mergedUrls.join('\n');
+          
+          // 保存到storage
+          chrome.storage.local.set({
+            killList: mergedUrls
+          }, function() {
+            if (chrome.runtime.lastError) {
+              alert('保存失败：' + chrome.runtime.lastError.message);
+            } else {
+              alert(`成功导入！\n新增: ${importedUrls.length} 个网址\n当前共有: ${mergedUrls.length} 个网址`);
+            }
+          });
+        });
+      } catch (error) {
+        alert('处理文件时出错：' + error.message);
+      }
+    };
+
+    reader.onerror = function() {
+      alert('读取文件时出错');
+    };
+
+    // 以文本格式读取文件
+    reader.readAsText(file);
+    
+    // 清除input的value，这样同一个文件可以重复导入
+    event.target.value = '';
+  });
+
+  // 导出功能
+  document.getElementById('exportBtn').addEventListener('click', function() {
+    const content = document.getElementById('killList').value;
+    const blob = new Blob([content], {type: 'text/plain'});
+    const url = URL.createObjectURL(blob);
+    
+    const now = new Date();
+    const timestamp = now.toISOString().slice(0,19).replace(/[:-]/g, '');
+    const defaultFilename = `blocked_sites_${timestamp}.txt`;
+
+    chrome.downloads.download({
+      url: url,
+      filename: defaultFilename,
+      saveAs: true // 允许用户选择保存位置和文件名
+    });
+  });
+
   // 保存修改
   document.getElementById('save').addEventListener('click', function() {
     const urls = document.getElementById('killList').value.split('\n').filter(url => url.trim());

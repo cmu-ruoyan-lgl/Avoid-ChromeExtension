@@ -7,7 +7,13 @@
     "tabs",
     "storage",
     "webNavigation",
-    "notifications"
+    "notifications",
+    "downloads",
+    "unlimitedStorage"
+  ],
+  "host_permissions": [
+    "file://*",
+    "<all_urls>"
   ],
   "action": {
     "default_popup": "popup.html"

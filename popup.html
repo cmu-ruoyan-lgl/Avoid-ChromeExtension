@@ -26,12 +26,27 @@
       color: #721c24;
       display: none;
     }
+    .button-group {
+      display: flex;
+      gap: 5px;
+    }
+    .button-group button {
+      flex: 1;
+    }
+    #fileInput {
+      display: none;
+    }
   </style>
 </head>
 <body>
   <div id="blockMessage"></div>
   <button id="addCurrent">将当前网页加入屏蔽列表</button>
   <textarea id="killList" placeholder="每行输入一个网址或正则表达式"></textarea>
+  <div class="button-group">
+    <button id="importBtn">导入列表</button>
+    <button id="exportBtn">导出列表</button>
+  </div>
+  <input type="file" id="fileInput" accept=".txt">
   <button id="save">保存修改</button>
   <script src="popup.js"></script>
 </body>
