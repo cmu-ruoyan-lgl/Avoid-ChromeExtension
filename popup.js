@@ -22,10 +22,32 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('addCurrent').addEventListener('click', function() {
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
       const currentUrl = tabs[0].url;
+      // 处理URL，获取纯净URL
+      let cleanUrl;
+      try {
+        const urlObj = new URL(currentUrl);
+        // 对于bilibili视频页面的特殊处理
+        if (urlObj.hostname.includes('bilibili.com') && urlObj.pathname.includes('/video/')) {
+          // 提取视频ID (BV号)
+          const bvMatch = urlObj.pathname.match(/\/video\/(BV[a-zA-Z0-9]+)/);
+          if (bvMatch) {
+            cleanUrl = `${urlObj.origin}/video/${bvMatch[1]}`;
+          }
+        } else {
+          // 其他网页只保留 origin 和 pathname
+          cleanUrl = urlObj.origin + urlObj.pathname;
+        }
+      } catch (e) {
+        cleanUrl = currentUrl;
+      }
+
+      console.log('Original URL:', currentUrl);
+      console.log('Clean URL:', cleanUrl);
+
       const textarea = document.getElementById('killList');
       const urls = textarea.value.split('\n').filter(url => url.trim());
-      if (!urls.includes(currentUrl)) {
-        urls.push(currentUrl);
+      if (!urls.includes(cleanUrl)) {
+        urls.push(cleanUrl);
         textarea.value = urls.join('\n');
         saveKillList(urls);
       }

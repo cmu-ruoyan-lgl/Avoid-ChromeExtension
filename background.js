@@ -1,16 +1,51 @@
+// 获取纯净URL的函数
+function getCleanUrl(url) {
+  try {
+    const urlObj = new URL(url);
+    // 对于bilibili视频页面的特殊处理
+    if (urlObj.hostname.includes('bilibili.com') && urlObj.pathname.includes('/video/')) {
+      const bvMatch = urlObj.pathname.match(/\/video\/(BV[a-zA-Z0-9]+)/);
+      if (bvMatch) {
+        return `${urlObj.origin}/video/${bvMatch[1]}`;
+      }
+    }
+    // 其他网页只保留 origin 和 pathname
+    return urlObj.origin + urlObj.pathname;
+  } catch (e) {
+    return url;
+  }
+}
+
 // 检查URL是否匹配屏蔽列表
 function isUrlBlocked(url, patterns) {
+  console.log('检查URL是否匹配屏蔽列表');
+  console.log('当前URL:', url);
+  const cleanUrl = getCleanUrl(url);
+  console.log('纯净URL:', cleanUrl);
+
   return patterns.some(pattern => {
     try {
       if (pattern.startsWith('/') && pattern.endsWith('/')) {
         // 正则表达式匹配
         const regex = new RegExp(pattern.slice(1, -1));
-        return regex.test(url);
+        return regex.test(url) || regex.test(cleanUrl);
       } else {
-        // 普通URL或前缀匹配
-        return url.startsWith(pattern);
+        console.log('进行URL匹配检查');
+        console.log('模式:', pattern);
+        console.log('待匹配URL:', cleanUrl);
+        
+        // 获取pattern的纯净URL
+        const cleanPattern = getCleanUrl(pattern);
+        console.log('纯净模式:', cleanPattern);
+        
+        // 检查是否匹配
+        const isMatched = cleanUrl === cleanPattern;
+        console.log('是否匹配:', isMatched);
+        
+        return isMatched;
       }
     } catch (e) {
+      console.error('匹配过程中出错:', e);
       return false;
     }
   });
