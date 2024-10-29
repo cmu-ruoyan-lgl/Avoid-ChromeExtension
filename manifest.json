@@ -32,5 +32,13 @@
   },
   "background": {
     "service_worker": "background.js"
+  },
+  "commands": {
+    "add-to-blocklist": {
+      "suggested_key": {
+        "default": "Alt+Shift+Q"
+      },
+      "description": "将当前网页加入屏蔽列表"
+    }
   }
 }

@@ -78,3 +78,59 @@ chrome.webNavigation.onBeforeNavigate.addListener(function(details) {
     }
   });
 });
+
+// 添加当前网页到屏蔽列表的函数
+async function addCurrentUrlToBlocklist(tab) {
+  const currentUrl = tab.url;
+  // 处理URL，获取纯净URL
+  let cleanUrl;
+  try {
+    const urlObj = new URL(currentUrl);
+    // 对于bilibili视频页面的特殊处理
+    if (urlObj.hostname.includes('bilibili.com') && urlObj.pathname.includes('/video/')) {
+      const bvMatch = urlObj.pathname.match(/\/video\/(BV[a-zA-Z0-9]+)/);
+      if (bvMatch) {
+        cleanUrl = `${urlObj.origin}/video/${bvMatch[1]}`;
+      }
+    } else {
+      // 其他网页只保留 origin 和 pathname
+      cleanUrl = urlObj.origin + urlObj.pathname;
+    }
+  } catch (e) {
+    cleanUrl = currentUrl;
+  }
+
+  console.log('Original URL:', currentUrl);
+  console.log('Clean URL:', cleanUrl);
+
+  // 获取现有的屏蔽列表
+  const result = await chrome.storage.local.get(['killList']);
+  const urls = result.killList || [];
+  
+  if (!urls.includes(cleanUrl)) {
+    urls.push(cleanUrl);
+    await chrome.storage.local.set({killList: urls});
+    
+    // 关闭当前标签页
+    await chrome.tabs.remove(tab.id);
+    
+    // 显示通知
+    chrome.notifications.create({
+      type: 'basic',
+      iconUrl: 'icon.jpg',
+      title: '网页已加入屏蔽列表',
+      message: '已添加并关闭: ' + cleanUrl
+    });
+  }
+}
+
+// 监听快捷键
+chrome.commands.onCommand.addListener(async (command) => {
+  if (command === 'add-to-blocklist') {
+    // 获取当前标签页
+    const [tab] = await chrome.tabs.query({active: true, currentWindow: true});
+    if (tab) {
+      await addCurrentUrlToBlocklist(tab);
+    }
+  }
+});
