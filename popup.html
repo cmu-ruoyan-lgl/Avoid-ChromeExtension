@@ -4,158 +4,295 @@
   <meta charset="UTF-8">
   <style>
     body {
-      width: 300px;
-      padding: 10px;
+      width: 320px;
+      padding: 16px;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background-color: #f8f9fa;
+      margin: 0;
+    }
+    .container {
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
     button {
       width: 100%;
       margin: 5px 0;
-      padding: 8px;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: #f0f0f0;
+      color: #333;
+    }
+    button:hover {
+      background: #e8e8e8;
+      transform: translateY(-1px);
+    }
+    #addCurrent {
+      background: #4CAF50;
+      color: white;
+    }
+    #addCurrent:hover {
+      background: #45a049;
+    }
+    #save {
+      background: #2196F3;
+      color: white;
+    }
+    #save:hover {
+      background: #1e88e5;
     }
     #killList {
       width: 100%;
       height: 200px;
-      margin: 5px 0;
+      margin: 12px 0;
+      padding: 12px;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 13px;
+      resize: vertical;
+      box-sizing: border-box;
+      background: #fafafa;
+      transition: border-color 0.2s ease;
+    }
+    #killList:focus {
+      outline: none;
+      border-color: #2196F3;
+      background: white;
     }
     #blockMessage {
-      padding: 10px;
-      margin: 5px 0;
-      background-color: #f8d7da;
-      border: 1px solid #f5c6cb;
-      border-radius: 4px;
-      color: #721c24;
+      padding: 12px;
+      margin: 8px 0;
+      background-color: #e8f5e9;
+      border: 1px solid #c8e6c9;
+      border-radius: 8px;
+      color: #2e7d32;
       display: none;
+      animation: fadeIn 0.3s ease;
     }
     .button-group {
       display: flex;
-      gap: 5px;
+      gap: 8px;
+      margin: 10px 0;
     }
     .button-group button {
       flex: 1;
+      font-size: 13px;
+      background: #f5f5f5;
+      padding: 12px;
+      border: 1px solid #e0e0e0;
+    }
+    .button-group button:hover {
+      background: #e8e8e8;
+      border-color: #d0d0d0;
     }
     #fileInput {
+      display: none;
+    }
+    .file-input-wrapper {
       display: none;
     }
     .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 10px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #eee;
+    }
+    .header h2 {
+      margin: 0;
+      font-size: 20px;
+      color: #1a73e8;
+      font-weight: 600;
     }
     .header-buttons {
       display: flex;
-      gap: 8px;
+      gap: 12px;
     }
     .icon-btn {
-      width: 24px;
-      height: 24px;
-      padding: 0;
+      width: 32px;
+      height: 32px;
+      padding: 4px;
       border: none;
-      background: none;
+      background: #f5f5f5;
+      border-radius: 50%;
       cursor: pointer;
-      transition: transform 0.2s;
+      transition: all 0.2s ease;
     }
     .icon-btn:hover {
       transform: scale(1.1);
+      background: #e8e8e8;
     }
     .icon-btn img {
       width: 100%;
       height: 100%;
+      object-fit: contain;
     }
     .modal {
       display: none;
-      position: absolute;
+      position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background-color: rgba(255, 255, 255, 0.98);
+      background-color: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
       padding: 20px;
       box-sizing: border-box;
       z-index: 1000;
-      overflow-y: auto;
+      animation: fadeIn 0.2s ease;
     }
     .modal-content {
       position: relative;
+      background: white;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
       max-width: 100%;
+      margin: 0 auto;
+      animation: slideUp 0.3s ease;
     }
     .close-btn {
       position: absolute;
-      top: 0;
-      right: 0;
-      padding: 5px;
+      top: 12px;
+      right: 12px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #f5f5f5;
+      border: none;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-size: 20px;
       color: #666;
+      transition: all 0.2s ease;
     }
     .close-btn:hover {
-      color: #000;
+      background: #e8e8e8;
+      color: #333;
     }
     .donation-content {
       text-align: center;
-      padding: 10px;
+      padding: 16px;
     }
     .donation-content img {
       max-width: 160px;
-      margin: 15px auto;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin: 20px auto;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: transform 0.2s ease;
+    }
+    .donation-content img:hover {
+      transform: scale(1.02);
     }
     .donation-text {
-      color: #666;
-      font-size: 14px;
+      color: #555;
+      font-size: 15px;
       line-height: 1.6;
-      margin: 15px 0;
+      margin: 20px 0;
     }
     .donation-footer {
-      font-size: 12px;
-      color: #999;
+      font-size: 13px;
+      color: #888;
       font-style: italic;
-      margin-top: 20px;
-      padding-top: 10px;
+      margin-top: 24px;
+      padding-top: 12px;
       border-top: 1px solid #eee;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .description-content {
+      color: #333;
+      line-height: 1.6;
+    }
+    .description-content h3 {
+      color: #1a73e8;
+      margin-top: 0;
+    }
+    .description-content h4 {
+      color: #5f6368;
+      margin-top: 20px;
+    }
+    .description-content ul {
+      padding-left: 20px;
+      margin: 8px 0;
+    }
+    .description-content li {
+      margin: 6px 0;
+      color: #444;
     }
   </style>
 </head>
 <body>
-  <div class="header">
-    <h2 style="margin: 0;">Avoid</h2>
-    <div class="header-buttons">
-      <button class="icon-btn" id="donateBtn">
-        <img src="headIcon.png" alt="赞助">
-      </button>
-      <button class="icon-btn" id="descriptionBtn">
-        <img src="info.png" alt="关于">
-      </button>
+  <div class="container">
+    <div class="header">
+      <h2>Avoid</h2>
+      <div class="header-buttons">
+        <button class="icon-btn" id="donateBtn" title="赞助">
+          <img src="headIcon.png" alt="赞助">
+        </button>
+        <button class="icon-btn" id="descriptionBtn" title="关于">
+          <img src="info.png" alt="关于">
+        </button>
+      </div>
     </div>
+
+    <div id="blockMessage"></div>
+    <button id="addCurrent">将当前网页加入屏蔽列表</button>
+    <textarea id="killList" placeholder="每行输入一个网址或正则表达式&#13;&#10;支持完整URL或正则表达式匹配"></textarea>
+    <div class="button-group">
+      <button id="importBtn">导入列表</button>
+      <button id="exportBtn">导出列表</button>
+    </div>
+    <input type="file" id="fileInput" accept=".txt">
+    <div class="file-input-wrapper">
+      <span id="fileName">未选择任何文件</span>
+    </div>
+    <button id="save">保存修改</button>
   </div>
-  
+
   <div id="descriptionModal" class="modal">
     <div class="modal-content">
-      <span class="close-btn" id="closeDescription">&times;</span>
-      <h3>关于 Avoid</h3>
-      <p>Avoid 是一个帮助你避免访问特定网站的 Chrome 扩展。</p>
-      <h4>主要功能：</h4>
-      <ul>
-        <li>快速将当前网页加入屏蔽列表（快捷键：⌥+⇧+Q）</li>
-        <li>支持正则表达式匹配网址</li>
-        <li>导入/导出屏蔽列表</li>
-        <li>自动清理 URL 参数</li>
-      </ul>
-      <h4>使用说明：</h4>
-      <ul>
-        <li>点击"将当前网页加入屏蔽列表"或使用快捷键添加网址</li>
-        <li>在文本框中直接编辑屏蔽列表</li>
-        <li>每行一个网址或正则表达式</li>
-        <li>点击保存后立即生效</li>
-      </ul>
+      <button class="close-btn" id="closeDescription">&times;</button>
+      <div class="description-content">
+        <h3>关于 Avoid</h3>
+        <p>Avoid 是一个帮助你避免访问特定网站的 Chrome 扩展。</p>
+        <h4>主要功能：</h4>
+        <ul>
+          <li>快速将当前网页加入屏蔽列表（快捷键：⌥+⇧+Q）</li>
+          <li>支持正则表达式匹配网址</li>
+          <li>导入/导出屏蔽列表</li>
+          <li>自动清理 URL 参数</li>
+        </ul>
+        <h4>使用说明：</h4>
+        <ul>
+          <li>点击"将当前网页加入屏蔽列表"或使用快捷键添加网址</li>
+          <li>在文本框中直接编辑屏蔽列表</li>
+          <li>每行一个网址或正则表达式</li>
+          <li>点击保存后立即生效</li>
+        </ul>
+      </div>
     </div>
   </div>
 
   <div id="donationModal" class="modal">
     <div class="modal-content">
-      <span class="close-btn" id="closeDonation">&times;</span>
+      <button class="close-btn" id="closeDonation">&times;</button>
       <div class="donation-content">
         <p class="donation-text">
           感谢您使用 Avoid！<br>
@@ -170,15 +307,6 @@
     </div>
   </div>
 
-  <div id="blockMessage"></div>
-  <button id="addCurrent">将当前网页加入屏蔽列表</button>
-  <textarea id="killList" placeholder="每行输入一个网址或正则表达式"></textarea>
-  <div class="button-group">
-    <button id="importBtn">导入列表</button>
-    <button id="exportBtn">导出列表</button>
-  </div>
-  <input type="file" id="fileInput" accept=".txt">
-  <button id="save">保存修改</button>
   <script src="popup.js"></script>
 </body>
 </html>
