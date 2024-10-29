@@ -153,6 +153,22 @@ document.addEventListener('DOMContentLoaded', function() {
       this.style.display = 'none';
     }
   });
+
+  // 添加捐款按钮的处理
+  document.getElementById('donateBtn').addEventListener('click', function() {
+    document.getElementById('donationModal').style.display = 'block';
+  });
+
+  document.getElementById('closeDonation').addEventListener('click', function() {
+    document.getElementById('donationModal').style.display = 'none';
+  });
+
+  // 点击模态框外部关闭
+  document.getElementById('donationModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+      this.style.display = 'none';
+    }
+  });
 });
 
 function saveKillList(urls) {
