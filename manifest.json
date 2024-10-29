@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Avoid",
   "version": "1.0",
-  "description": "阻止访问指定网站",
+  "description": "一款自定义网页屏蔽工具，通过智能匹配帮你过滤不想看到的网站。支持一键屏蔽、快捷键操作，让你享受专注高效的网上冲浪体验。",
   "icons": {
     "16": "icon.png",
     "32": "icon.png",
