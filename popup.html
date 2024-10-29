@@ -36,9 +36,79 @@
     #fileInput {
       display: none;
     }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .description-btn {
+      width: 24px;
+      height: 24px;
+      padding: 0;
+      border: none;
+      background: none;
+      cursor: pointer;
+    }
+    .description-btn img {
+      width: 100%;
+      height: 100%;
+    }
+    #descriptionModal {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.95);
+      padding: 20px;
+      box-sizing: border-box;
+      z-index: 1000;
+    }
+    .modal-content {
+      position: relative;
+    }
+    .close-btn {
+      position: absolute;
+      top: 0;
+      right: 0;
+      padding: 5px;
+      cursor: pointer;
+      font-size: 20px;
+    }
   </style>
 </head>
 <body>
+  <div class="header">
+    <h2 style="margin: 0;">Avoid</h2>
+    <button class="description-btn" id="descriptionBtn">
+      <img src="descriptionDot.png" alt="关于">
+    </button>
+  </div>
+  
+  <div id="descriptionModal">
+    <div class="modal-content">
+      <span class="close-btn" id="closeDescription">&times;</span>
+      <h3>关于 Avoid</h3>
+      <p>Avoid 是一个帮助你避免访问特定网站的 Chrome 扩展。</p>
+      <h4>主要功能：</h4>
+      <ul>
+        <li>快速将当前网页加入屏蔽列表（快捷键：⌥+⇧+Q）</li>
+        <li>支持正则表达式匹配网址</li>
+        <li>导入/导出屏蔽列表</li>
+        <li>自动清理 URL 参数</li>
+      </ul>
+      <h4>使用说明：</h4>
+      <ul>
+        <li>点击"将当前网页加入屏蔽列表"或使用快捷键添加网址</li>
+        <li>在文本框中直接编辑屏蔽列表</li>
+        <li>每行一个网址或正则表达式</li>
+        <li>点击保存后立即生效</li>
+      </ul>
+    </div>
+  </div>
+
   <div id="blockMessage"></div>
   <button id="addCurrent">将当前网页加入屏蔽列表</button>
   <textarea id="killList" placeholder="每行输入一个网址或正则表达式"></textarea>

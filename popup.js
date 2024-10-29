@@ -137,6 +137,22 @@ document.addEventListener('DOMContentLoaded', function() {
     const urls = document.getElementById('killList').value.split('\n').filter(url => url.trim());
     saveKillList(urls);
   });
+
+  // 添加关于按钮的处理
+  document.getElementById('descriptionBtn').addEventListener('click', function() {
+    document.getElementById('descriptionModal').style.display = 'block';
+  });
+
+  document.getElementById('closeDescription').addEventListener('click', function() {
+    document.getElementById('descriptionModal').style.display = 'none';
+  });
+
+  // 点击模态框外部关闭
+  document.getElementById('descriptionModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+      this.style.display = 'none';
+    }
+  });
 });
 
 function saveKillList(urls) {
